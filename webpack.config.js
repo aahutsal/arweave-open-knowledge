@@ -1,25 +1,70 @@
-const path = require("path")
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const HtmlWebpackInlineSourcePlugin = require("html-webpack-inline-source-plugin")
-const glob = require("glob")
+const webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-module.exports = {
-    entry: {
-        "index.html": glob.sync("build/*.?(js|css)").map(f => path.resolve(__dirname, f)),
-    },
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"],
-            },
+const config = {
+  entry: './src/index.tsx',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: 'babel-loader',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(ts|tsx)?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
         ],
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-	    inlineSource: '.(js|css)$' // embed all javascript and css inline
-        }),
-        new HtmlWebpackInlineSourcePlugin()
-    ],
+        exclude: /\.module\.css$/
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+        ],
+        include: /\.module\.css$/
+      }
+    ]
+  },
+  resolve: {
+    extensions: [
+      '.js',
+      '.jsx',
+      '.tsx',
+      '.ts'
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+        template: require('html-webpack-template'),
+        inject: false,
+        appMountId: 'app',
+      })
+  ],
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\\/]node_modules[\\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
+  }
 }
+
+module.exports = config;
