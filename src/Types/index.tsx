@@ -9,6 +9,7 @@ export interface UserState{
 
  export interface LoginProps {
     changeView: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    loggedin: (logged: boolean, address: string, view: string) => void;
     arweave?: Arweave;
 }
 

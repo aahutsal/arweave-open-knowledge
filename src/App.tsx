@@ -56,9 +56,6 @@ export default class App extends React.Component<{}, AppState> {
   }
 
   updateView(event: React.MouseEvent<HTMLElement, MouseEvent>): void{
-    console.log("Log in")
-    console.log(event.currentTarget)
-    console.log(event.target)
     this.setState({view: (event.target as any).value});
   }
 
@@ -69,34 +66,41 @@ export default class App extends React.Component<{}, AppState> {
        address: ""
     }
    
-    this.setState({view: (event.target as any).value, userDetails: userUpdate, arweave: undefined});
+    this.setState({view: "main", userDetails: userUpdate, arweave: undefined});
   }
 
-  loggedin(userDetails: UserState, view: string){
+  loggedin(logged: boolean, address: string,  view: string){
+    let userDetails: UserState  = {
+      loggedIn: false,
+       address: ""
+    }
     this.setState({userDetails, view})
   }
-    render() {
+  render() {
 
-      if(this.state.view.length === 0){
-        this.setState({view:"main"})
-      }
-
-      switch(this.state.view) {
-        case "main":
-          return(
-                <div>
-                <div className="main-card card w-100" style={{zIndex:1}}>
-                  <LoginButton changeView={this.updateView.bind(this)}/>
-                  <LogoutButton logout={this.logout.bind(this)}/>
-              </div>
-              </div>
-          );
-        case "login":
-          return(
-            <Login changeView={this.updateView.bind(this)} arweave={this.state.arweave}/>
-          );
-      }
+    if(this.state.view.length === 0){
+      this.setState({view:"main"})
     }
+
+    switch(this.state.view) {
+      case "main":
+        return(
+              <div>
+              <div className="main-card card w-100" style={{zIndex:1}}>
+                <LoginButton changeView={this.updateView.bind(this)}/>
+                <LogoutButton logout={this.logout.bind(this)}/>
+            </div>
+            </div>
+        );
+      case "Login":
+        return(
+          <Login 
+              changeView={this.updateView.bind(this)} 
+              loggedin={this.loggedin.bind(this)}
+              arweave={this.state.arweave}/>
+        );
+    }
+  }
 }
 
 

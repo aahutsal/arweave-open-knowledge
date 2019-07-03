@@ -2,7 +2,6 @@ import React  from 'react';
 import {UserState, LoginProps} from '../../Types';
 import styled from 'styled-components';
 
-
 const DragAndDropFile = styled.input`
     opacity: 0;
     position: absolute;
@@ -13,7 +12,7 @@ const DragAndDropFile = styled.input`
 
 const EncloseFileElement = styled.div`
     cursor: pointer;
-    height: 200px;
+    height: 300px;
     border: 2px dashed #62666f;
     text-align: center;
     display: flex;
@@ -22,7 +21,7 @@ const EncloseFileElement = styled.div`
     justify-content: center;
     position: relative;
     margin: auto;
-    max-width: 300px;`;
+    max-width: 400px;`;
     
 export default class Login extends React.Component<LoginProps, UserState> {
     state = {
@@ -38,15 +37,18 @@ export default class Login extends React.Component<LoginProps, UserState> {
         let fileReader = new FileReader()
         fileReader.onload = async (ev: any) => {
             try {
+                
                 if(ev.target){
-                    let wallet = JSON.parse(ev.target.value)
+                    console.log(ev.target.result)
+                    let wallet = JSON.parse(ev.target.result)
                     let address = ""
+                    console.log(wallet)
                     if(this.props.arweave){
                         address = await this.props.arweave.wallets.jwkToAddress(wallet);
                     }
+                    console.log(address)
                      
-                    this.setState({loggedIn: true, address: address})
-
+                    this.props.loggedin(true, address, "main")
                 }
 
             } catch (err) {
@@ -77,9 +79,7 @@ export default class Login extends React.Component<LoginProps, UserState> {
         }
         //this.props.changeView("loggedin")
     }
-//            {topLeft}
-//<Label>Drop your login file key here</Label>
-//{topLeft}
+
     render() {
         
        /** let topLeft = (
@@ -89,18 +89,27 @@ export default class Login extends React.Component<LoginProps, UserState> {
           )
         */
 
-        return (
-            <div>
-            <EncloseFileElement>
-            <DragAndDropFile
-                    type="file" 
-                    onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-                        if(ev.target.files){this.extractAddressFromFile(ev.target.files)}}}
-            />
-            <label>Drop your login file key here</label>
-            </EncloseFileElement>
-          </div>
-        )
+            if(this.state.loggedIn){
+                return(<div>
+                    logged in
+                </div>)
+
+            } else {
+                return (
+                    <div>
+                    <EncloseFileElement>
+                    <DragAndDropFile
+                            type="file" 
+                            onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+                                if(ev.target.files){this.extractAddressFromFile(ev.target.files)}}}
+                    />
+                    <label>Drop your login file key here</label>
+                    </EncloseFileElement>
+                  </div>
+                
+                )
+            }
+
     }
 }
 
