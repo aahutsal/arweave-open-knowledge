@@ -2,21 +2,27 @@
   "name": "arweave-open-knowledge",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "glob": "^7.1.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1"
+  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npx react-scripts start",
+    "eject": "npx react-scripts eject",
     "build": "npm run build:react && npm run build:bundle",
-    "build:react": "react-scripts build",
-    "build:bundle": "webpack --config webpack.config.js",
+    "build:react": "npx react-scripts build",
+    "build:bundle": "npx webpack --config webpack.config.js",
     "deploy": "npm run build && npm run deploy:arweave",
-    "deploy:arweave": "npx",
-    "test:jest": "jest",
-    "test:ci": "react-scripts test",
+    "deploy:arweave": "npx arweave deploy",
+    "test:jest": "npx jest",
+    "test:ci": "npx react-scripts test",
     "test": "npm run test:ci && npm run test:jest",
-    "ci:before": "greenkeeper-lockfile-update",
-    "ci:after": "greenkeeper-lockfile-upload",
+    "ci:before": "npx greenkeeper-lockfile-update",
+    "ci:after": "npx greenkeeper-lockfile-upload",
     "release": "standard-version",
-    "eject": "react-scripts eject",
-    "clean": "rm -rf dist/*",
+    "clean": "rm -rf dist/*"
   },
   "eslintConfig": {
     "extends": "react-app"
