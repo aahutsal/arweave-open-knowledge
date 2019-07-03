@@ -6,7 +6,7 @@ const config = {
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contenthash].js'
+    filename: 'index.html'
   },
   module: {
     rules: [
