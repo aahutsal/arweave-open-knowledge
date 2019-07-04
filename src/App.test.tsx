@@ -3,8 +3,6 @@ import React from 'react';
 import App from './App';
 import renderer from 'react-test-renderer'
 import waitForExpect from 'wait-for-expect'
-import { shallow, render, mount } from 'enzyme';
-
 
 /**
  * Demo test showing how to use react-test-renderer
@@ -44,16 +42,3 @@ test("it waits for the number to change", async () => {
     expect(numberToChange).toEqual(100)
   })
 })
-
-/**
- * Demo test showing how to use enzyme
- */
-it('should render style', () => {
-  chai.expect(shallow(
-    <div
-      style={{
-        left: '4rem'
-      }}
-    />
-  )).to.have.style('left', '4rem');
-});

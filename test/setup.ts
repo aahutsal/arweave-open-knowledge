@@ -23,6 +23,6 @@ global.shallow = shallow;
 
 chai.use(chaiEnzyme());
 
-import Adapter from 'enzyme-adapter-react-15'
+import Adapter from 'enzyme-adapter-react-16'
 
 Enzyme.configure({adapter:new Adapter()})

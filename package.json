@@ -40,24 +40,32 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^8.0.4",
     "@types/chai": "^4.1.7",
     "@types/chai-enzyme": "^0.6.6",
     "@types/enzyme": "^3.10.1",
-    "@types/enzyme-adapter-react-15": "^1.0.5",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^24.0.15",
     "@types/node": "^12.0.10",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "@types/react-test-renderer": "^16.8.2",
     "arweave-deploy": "^1.5.0",
+    "axios-mock-adapter": "^1.17.0",
     "chai": "^4.2.0",
     "chai-enzyme": "^1.0.0-beta.1",
     "css-loader": "^2.1.1",
     "enzyme": "^3.10.0",
-    "enzyme-adapter-react-15": "^1.4.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "html-webpack-inline-source-plugin": "^0.0.10",
     "html-webpack-plugin": "^3.2.0",
     "html-webpack-template": "^6.2.0",
+    "jest": "^24.8.0",
+    "jest-dom": "^3.5.0",
+    "jest-image-snapshot": "^2.9.0",
+    "jest-transform-css": "^2.0.0",
+    "jest-transform-file": "^1.1.1",
+    "jsdom-screenshot": "^3.2.0",
     "react-test-renderer": "^16.8.6",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
@@ -75,8 +83,7 @@
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "jest-transform-css",
-      "^.+\\.svg$": "jest-transform-file",
-      "^(?!.*\\.(js|jsx|mjs|css|json|svg)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^.+\\.svg$": "jest-transform-file"
     }
   }
 }
