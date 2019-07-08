@@ -1,26 +1,106 @@
 import React from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+import Login from './components/LoginPage'
+import arweave from './ArweaveInit'
+import {UserState, AppState} from './Types';
+//import { render } from 'react-dom';
+import Arweave from 'arweave/web';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import LoginButton from './components/Login'
+import LogoutButton from './components/Logout'
+
+
+let mainStyle = {
+  width:"100%",
+  height:"100%",
+  backgroundImage:"linear-gradient(#292929, #191919)",
+  backgroundColor:"#191919",
+  hotColor:"#F69E4D",
+  mainColorAlt:"#fa7d36",
+  mainColor:"#F76B1C",
 }
 
-export default App;
+
+export default class App extends React.Component<{}, AppState> {
+  
+  state = {
+    view: "main",
+    userDetails: {
+      loggedIn: false,
+      address: ""
+    },
+    arweave: undefined
+  };
+  
+  updateDimensions() {
+    //force it to rerender when the window is resized to make sure qr fits etc
+    this.forceUpdate();
+  }
+
+  componentDidMount() {
+    document.body.style.backgroundColor = mainStyle.backgroundColor
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+
+    this.connectToArweave()
+  }
+
+  connectToArweave(){
+    let mainnetArweave: Arweave = arweave();
+    this.setState({arweave:mainnetArweave})
+
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  updateView(event: React.MouseEvent<HTMLElement, MouseEvent>): void{
+    this.setState({view: (event.target as any).value});
+  }
+
+  logout(event: React.MouseEvent<HTMLElement, MouseEvent>): void{
+    console.log("logOut")
+    let userUpdate: UserState  = {
+      loggedIn: false,
+       address: ""
+    }
+   
+    this.setState({view: "main", userDetails: userUpdate, arweave: undefined});
+  }
+
+  loggedin(logged: boolean, address: string,  view: string){
+    let userDetails: UserState  = {
+      loggedIn: false,
+       address: ""
+    }
+    this.setState({userDetails, view})
+  }
+  render() {
+
+    if(this.state.view.length === 0){
+      this.setState({view:"main"})
+    }
+
+    switch(this.state.view) {
+      case "main":
+        return(
+              <div>
+              <div className="main-card card w-100" style={{zIndex:1}}>
+                <LoginButton changeView={this.updateView.bind(this)}/>
+                <LogoutButton logout={this.logout.bind(this)}/>
+            </div>
+            </div>
+        );
+      case "Login":
+        return(
+          <Login 
+              changeView={this.updateView.bind(this)} 
+              loggedin={this.loggedin.bind(this)}
+              arweave={this.state.arweave}/>
+        );
+    }
+  }
+}
+
+
