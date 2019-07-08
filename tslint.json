@@ -3,7 +3,6 @@
   "rules": {
     // override tslint-react rules here
    "jsx-wrap-multiline": false,
-   "no-console": 0,
    "no-implicit-dependencies": [true, "dev"]
   }
 }
