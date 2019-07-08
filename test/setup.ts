@@ -2,6 +2,9 @@
 import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 import Enzyme, { shallow, render, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16'
+
+Enzyme.configure({adapter:new Adapter()})
 
 declare global {
     namespace NodeJS {
@@ -21,8 +24,8 @@ global.mount = mount;
 global.render = render;
 global.shallow = shallow;
 
+Object.defineProperty(window, 'crypto', {value: require('crypto')});
+Object.defineProperty(window.crypto, 'subtle', {value: require('subtle')});
+
 chai.use(chaiEnzyme());
 
-import Adapter from 'enzyme-adapter-react-16'
-
-Enzyme.configure({adapter:new Adapter()})
