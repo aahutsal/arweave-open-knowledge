@@ -1,3 +1,4 @@
+// App.enzyme.test.js
 import React from 'react';
 import App from './App';
 
