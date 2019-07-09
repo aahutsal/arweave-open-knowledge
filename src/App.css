@@ -23,6 +23,9 @@
   color: #61dafb;
 }
 
+.toolbar {
+  color: white;
+}
 .hidden {
     display: none;
 }
