@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/draft-js": "^0.10.34",
     "@types/react": "^16.8.23",
     "@types/styled-components": "^4.1.16",
     "arweave": "^1.4.0",
+    "draft-js": "^0.10.5",
     "glob": "^7.1.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

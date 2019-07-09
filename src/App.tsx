@@ -7,6 +7,7 @@ import Arweave from 'arweave/web';
 import {UserState, AppState} from './Types';
 import LoginButton from './components/Login'
 import LogoutButton from './components/Logout'
+import BlogEngine from './components/BlogEngine'
 
 let mainStyle = {
   width:"100%",
@@ -89,6 +90,7 @@ export default class App extends React.Component<{}, AppState> {
                           <span className={this.state.userDetails.loggedIn?'':'hidden'}>
                             <LogoutButton logout={this.logout.bind(this)}/>
                           </span>
+                            <BlogEngine/>
                         </div>
                       </div>
                   );
