@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Button, Row, Col} from 'react-bootstrap';
 import { ArweaveSingleton } from './AuthArweaveComponent'
@@ -7,15 +6,11 @@ const propTypes = {};
 const defaultProps = {};
 
 class TextareaComponent extends React.Component<{className?:string, rows:number, readOnly?:boolean, value?:string}, {}>{
-  static propTypes:any = {
-  };
+  static propTypes:any = {};
   static defaultProps:any = {
     className:"",
     readOnly:true
   };
-  constructor (props:any){
-    super(props)
-  }
 
   render(){
     return (
@@ -36,9 +31,6 @@ class CreateWalletComponent extends React.Component<{}, {address:string, key:str
   state = {
     address:"",
     key:""
-  }
-  constructor(props:any) {
-    super(props);
   }
 
   generateNewAddress(){

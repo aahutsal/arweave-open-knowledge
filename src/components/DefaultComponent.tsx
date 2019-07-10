@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import "../App.css";
 import logo from "../logo.svg";
 
-import { BrowserRouter as Router, Route } from "react-router-dom";
 const propTypes = {};
 
 const defaultProps = {};
@@ -11,9 +9,6 @@ const defaultProps = {};
 class DefaultComponent extends React.Component {
   static propTypes:any = {};
   static defaultProps:any = {};
-  constructor(props:any) {
-    super(props);
-  }
 
   render() {
     return (

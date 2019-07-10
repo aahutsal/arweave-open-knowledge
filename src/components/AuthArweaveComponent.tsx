@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import {
-  BrowserRouter as Router,
   Route,
   Link,
   Redirect,
   withRouter
 } from "react-router-dom";
 
-import { Button, ButtonToolbar, Row, Col } from 'react-bootstrap'
-import Arweave from 'arweave/web';
+import { Button, ButtonToolbar, Row, Col } from "react-bootstrap"
+import Arweave from "arweave/web";
 
-import { RedirectState } from '../Types'
-import styled from 'styled-components';
+import HomeDefault from "./HomeDefault"
+import SettingsComponent from "./SettingsComponent"
+import BlogPageContainer from "./BlogEngine"
+import { RedirectState } from "../Types"
+import styled from "styled-components";
+
 
 class ArweaveSingleton {
   private static _instance: ArweaveSingleton;
@@ -48,8 +51,7 @@ const arweaveAuth = {
       let fileReader = new FileReader()
       fileReader.onload = (ev: any) => {
         if(ev.target){
-          let address,
-          wallet = JSON.parse(ev.target.result)
+          const wallet = JSON.parse(ev.target.result)
           console.log(wallet)
 
           this.arweave.wallets
@@ -76,7 +78,8 @@ const arweaveAuth = {
 };
 
 const AuthButton = withRouter(
-  ({ history }) => {
+  ({ history
+ }) => {
     return !arweaveAuth.isAuthenticated ? (
       <ButtonToolbar>
         <Row>
@@ -86,7 +89,7 @@ const AuthButton = withRouter(
           </Link>
         </Col>
         <Col xl={6} className="toolbar">
-        <Login/>
+          <Login/>
         </Col>
         </Row>
         </ButtonToolbar>
@@ -98,10 +101,11 @@ const AuthButton = withRouter(
         <p>balance: {arweaveAuth.balance} AR</p>
         </Col>
         <Col xl={2} className="toolbar">
+          <Link to="/private/draft" type="button" className="btn btn-secondary">
+            Draft
+          </Link>
           <Button variant="success">Settings</Button>
-        </Col>
-        <Col xl={2} className="toolbar">
-        <Button variant="secondary" onClick={() => arweaveAuth.signout(() => history.push("/"))}>Logout</Button>
+          <Button variant="secondary" onClick={() => arweaveAuth.signout(() => history.push("/"))}>Logout</Button>
         </Col>
         </Row>
         </ButtonToolbar>
@@ -109,14 +113,25 @@ const AuthButton = withRouter(
   }
 );
 
-function PrivateRoute(params:any) {
+export function PublicRoute(params:any){
+  return (
+      <div>
+        <h1>Public</h1>
+      </div>
+  );
+}
+export function PrivateRoute(params:any) {
   const {component:Component, ...rest} = params
   return (
     <Route
       {...rest}
       render={props =>
         arweaveAuth.isAuthenticated ? (
-          <Component {...props} />
+            <Component {...props}>
+              <Route exact path={props.match.path} component={HomeDefault} />
+              <Route path={`${props.match.path}/draft`} component={BlogPageContainer} />
+              <Route path={`${props.match.path}/settings`} component={SettingsComponent} />
+            </Component>
         ) : (
           <Redirect
             to={{
@@ -150,13 +165,10 @@ max-width: 400px;`;
 
 class Login extends Component<{}, RedirectState> {
   state = { redirectToReferrer: false }
-  constructor(args:any){
-    super(args)
-  }
 
   login(files:FileList | null, cb:Function){
     arweaveAuth.authenticate(files, () => {
-      this.setState({ redirectToReferrer: true });
+      this.setState({ redirectToReferrer: false });
       cb();
     });
   };
@@ -175,6 +187,7 @@ class Login extends Component<{}, RedirectState> {
              onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
                this.login(ev.target.files, () => {
                  console.log('Successfully logged in!')
+                 window.history.go(-1)
                })
              }}
           />

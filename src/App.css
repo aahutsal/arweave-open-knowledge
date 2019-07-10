@@ -38,3 +38,21 @@
     transform: rotate(360deg);
   }
 }
+
+.editorContainer {
+  padding: 1em;
+  margin: 1em;
+
+}
+
+.editors {
+  border: 1px blue solid;
+  background-color: white;
+  min-height: 60vh;
+  min-width: 90vh;
+  padding: 1em;
+  margin: 1em;
+  font-family: 'Open Sans';
+  font-size: 90%;
+  color: aqua
+}
