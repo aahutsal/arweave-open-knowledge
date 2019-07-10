@@ -3,34 +3,34 @@ import React from "react";
 import {convertToRaw, Editor, EditorState,  RichUtils} from "draft-js";
 
 class BlogPageContainer extends React.Component<{}, {}> {
-    public editor?: Editor;
+    editor?: Editor;
 
-    public state = {
+    state = {
         editorState: EditorState.createEmpty(),
     };
 
-    public setEditor(editor: Editor) {
+    setEditor(editor: Editor) {
         if (editor) {
             this.editor = editor;
         }
     }
 
-    public focusEditor() {
+    focusEditor() {
         if (this.editor) {
           this.editor.focus();
         }
     }
 
-    public componentDidMount() {
+    componentDidMount() {
         this.focusEditor();
     }
 
-    public onChange(editorState: EditorState) {
+    onChange(editorState: EditorState) {
         this.setState({editorState});
 
     }
 
-    public submitEditor() {
+    submitEditor() {
         const contentState = this.state.editorState.getCurrentContent();
         const note = {
                       created: Date.now() + "",
@@ -39,7 +39,7 @@ class BlogPageContainer extends React.Component<{}, {}> {
         localStorage.setItem(note.created, note.transformed);
     }
 
-    public handleKeyCommand(command: string) {
+    handleKeyCommand(command: string) {
         const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
         if (newState) {
             this.onChange(newState);
@@ -48,19 +48,19 @@ class BlogPageContainer extends React.Component<{}, {}> {
         return "not-handled";
     }
 
-    public onItalicClick() {
+    onItalicClick() {
         this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "ITALIC"));
     }
 
-    public onBoldClick() {
+    onBoldClick() {
         this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
     }
 
-    public onUnderlineClick() {
+    onUnderlineClick() {
         this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "UNDERLINE"));
     }
 
-    public render() {
+    render() {
         this.onUnderlineClick = this.onUnderlineClick.bind(this);
         this.onBoldClick = this.onBoldClick.bind(this);
         this.onItalicClick = this.onItalicClick.bind(this);
