@@ -9,6 +9,18 @@ class BlogPageContainer extends React.Component<{}, {}> {
         editorState: EditorState.createEmpty(),
     };
 
+    constructor(props:any){
+      super(props)
+      this.onUnderlineClick = this.onUnderlineClick.bind(this);
+      this.onBoldClick = this.onBoldClick.bind(this);
+      this.onItalicClick = this.onItalicClick.bind(this);
+      this.onChange = this.onChange.bind(this);
+      this.handleKeyCommand = this.handleKeyCommand.bind(this);
+      this.submitEditor = this.submitEditor.bind(this);
+      this.setEditor = this.setEditor.bind(this);
+      this.focusEditor = this.focusEditor.bind(this);
+    }
+
     setEditor(editor: Editor) {
         if (editor) {
             this.editor = editor;
@@ -61,14 +73,6 @@ class BlogPageContainer extends React.Component<{}, {}> {
     }
 
     render() {
-        this.onUnderlineClick = this.onUnderlineClick.bind(this);
-        this.onBoldClick = this.onBoldClick.bind(this);
-        this.onItalicClick = this.onItalicClick.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.handleKeyCommand = this.handleKeyCommand.bind(this);
-        this.submitEditor = this.submitEditor.bind(this);
-        this.setEditor = this.setEditor.bind(this);
-        this.focusEditor = this.focusEditor.bind(this);
         return (
             <div className="editorContainer">
              <div className="editors" onClick={this.focusEditor}>
