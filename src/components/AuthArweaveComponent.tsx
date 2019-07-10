@@ -187,7 +187,6 @@ class Login extends Component<{}, RedirectState> {
              onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
                this.login(ev.target.files, () => {
                  console.log('Successfully logged in!')
-                 window.history.go(-1)
                })
              }}
           />
