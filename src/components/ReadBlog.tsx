@@ -2,8 +2,7 @@ import {ContentState , convertFromRaw, EditorState} from "draft-js";
 import React from "react";
 import { Col, Container,  Row} from "react-bootstrap";
 import { RouteComponentProps } from "react-router-dom";
-
-const fakeAddress = "0x9003847536278188";
+import { getMyAddress } from './ArweaveAuth'
 
 class ReadBlog extends React.Component<RouteComponentProps<{}>> {
     public state = {
@@ -18,7 +17,8 @@ class ReadBlog extends React.Component<RouteComponentProps<{}>> {
     }
 
     public retrieveArticle(created: string): ContentState | null {
-        const container = localStorage.getItem(fakeAddress);
+      getMyAddress().then(address => {
+        const container = localStorage.getItem();
         if (container) {
             const parsedContainer = JSON.parse(container);
             for (const item of parsedContainer) {
@@ -28,6 +28,7 @@ class ReadBlog extends React.Component<RouteComponentProps<{}>> {
             }
         }
         return null;
+      })
     }
 
     public componentDidMount() {

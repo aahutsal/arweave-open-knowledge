@@ -4,13 +4,14 @@ import { Col, Container,  Row} from "react-bootstrap";
 import { BrowserRouter as Router,  Link , Route } from "react-router-dom";
 import ReadBlog from "./ReadBlog";
 
-const fakeAddress = "0x9003847536278188";
+import { getMyAddress } from './ArweaveAuth'
 
 class BlogPageContainer extends React.Component<{}, {}> {
     public editor?: Editor;
 
     public state = {
-        editorState: EditorState.createEmpty(),
+      editorState: EditorState.createEmpty(),
+      content: null
     };
 
     public constructor(props: any) {
@@ -40,7 +41,59 @@ class BlogPageContainer extends React.Component<{}, {}> {
     }
 
     public componentDidMount() {
-        this.focusEditor();
+      this.focusEditor();
+      this.retrieveArticlesMetaData()
+      .then(mlistOfContents => {
+        const links = [];
+
+        let i = 0;
+
+        const address = (async () => await getMyAddress())();
+        for (const [created, heading] of mlistOfContents) {
+          const link = `/${address}/${created}`;
+          console.log(link);
+          links.push(<li key={i++}><Link key={i++} to={link}>{heading}</Link></li>);
+        }
+
+        this.setState({content: (
+            <Container>
+                 <div className="App">
+                    <Row>
+                        <Col xl={12}>
+                            <div className="editorContainer">
+                                <div className="editors" onClick={this.focusEditor}>
+                                <button onClick={this.onUnderlineClick}>U</button>
+                                <button onClick={this.onBoldClick}><b>B</b></button>
+                                <button onClick={this.onItalicClick}><em>I</em></button>
+                                <button onClick={this.submitEditor}><em>Save</em></button>
+                                <Editor
+                                    ref={this.setEditor}
+                                    onChange={this.onChange}
+                                    handleKeyCommand={this.handleKeyCommand}
+                                    editorState={this.state.editorState}
+                                />
+                                </div>
+                                </div>
+                        </Col>
+                    </Row>
+                    <Router >
+                        <Row>
+                            <Col xl={12}>
+                            <div>
+                                <h2>Blogs</h2>
+                                <strong>Click on the links to read about blog</strong>
+                                <ul>
+                                <li><Link to="/">Home</Link></li>
+                                {links}
+                                </ul>
+                                <Route path="/:addres/:id" component={ReadBlog} />
+                            </div>
+                            </Col>
+                        </Row>
+                    </Router>
+                 </div>
+            </Container>
+        )})})
     }
 
     public onChange(editorState: EditorState) {
@@ -48,20 +101,24 @@ class BlogPageContainer extends React.Component<{}, {}> {
 
     }
 
-    public retrieveArticle(created: string): ContentState | null {
-        const container = localStorage.getItem(fakeAddress);
-        if (container) {
-            const parsedContainer = JSON.parse(container);
-            for (const item of parsedContainer) {
-                if (item.created === created) {
-                    return convertFromRaw(item.transformed);
-                }
-            }
+  public async retrieveArticle(created: string): Promise<ContentState | null> {
+    const address = await getMyAddress();
+    if(address){
+      const container = localStorage.getItem(address);
+      if (container) {
+        const parsedContainer = JSON.parse(container);
+        for (const item of parsedContainer) {
+          if (item.created === created) {
+            return convertFromRaw(item.transformed);
+          }
         }
         return null;
+      }
     }
+    return null;
+  }
 
-    public submitEditor() {
+    public async submitEditor() {
         const contentState = this.state.editorState.getCurrentContent();
         const end = 50;
         const tagHeading = contentState.getPlainText().trim().substr(0, end);
@@ -72,21 +129,23 @@ class BlogPageContainer extends React.Component<{}, {}> {
                 transformed: convertToRaw(contentState),
                 };
             console.log(contentState);
-            console.log(contentState.getPlainText());
-            const arrayOfTimeStamps = localStorage.getItem(fakeAddress);
+          console.log(contentState.getPlainText());
+          const address = await getMyAddress() || "";
+            const arrayOfTimeStamps = localStorage.getItem(address);
             if (arrayOfTimeStamps) {
-                const container = JSON.parse(arrayOfTimeStamps);
-                container.push([note.created, note]);
-                localStorage.setItem(fakeAddress, JSON.stringify(container));
+              const container = JSON.parse(arrayOfTimeStamps);
+              container.push([note.created, note]);
+              localStorage.setItem(address, JSON.stringify(container));
             } else {
-                const arrayOfTimeStampAndContent = [note.created, note];
-                localStorage.setItem(fakeAddress, JSON.stringify(arrayOfTimeStampAndContent));
+              const arrayOfTimeStampAndContent = [note.created, note];
+              localStorage.setItem(address, JSON.stringify(arrayOfTimeStampAndContent));
             }
         }
     }
 
-    public retrieveArticlesMetaData(): Array<Array<string | string>> {
-        const container = localStorage.getItem(fakeAddress);
+  public async retrieveArticlesMetaData(): Promise<Array<Array<string | string>>> {
+       const container = localStorage.getItem(await getMyAddress() || "");
+
         const compare = (a: any , b: any) => {
             const keyA = parseInt(a.created, 10);
             const keyB = parseInt(b.created, 10);
@@ -127,57 +186,13 @@ class BlogPageContainer extends React.Component<{}, {}> {
         this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "UNDERLINE"));
     }
 
-    public render() {
-        const links = [];
-      const mlistOfContents = this.retrieveArticlesMetaData();
-         let i = 0;
-         for (const [created, heading] of mlistOfContents) {
-          const link = `/${fakeAddress}/${created}`;
-          console.log(link);
-          links.push(<li key={i++}><Link key={i++} to={link}>{heading}</Link></li>);
-        }
-
-        return (
-            <Container>
-                 <div className="App">
-                    <Row>
-                        <Col xl={12}>
-                            <div className="editorContainer">
-                                <div className="editors" onClick={this.focusEditor}>
-                                <button onClick={this.onUnderlineClick}>U</button>
-                                <button onClick={this.onBoldClick}><b>B</b></button>
-                                <button onClick={this.onItalicClick}><em>I</em></button>
-                                <button onClick={this.submitEditor}><em>Save</em></button>
-                                <Editor
-                                    ref={this.setEditor}
-                                    onChange={this.onChange}
-                                    handleKeyCommand={this.handleKeyCommand}
-                                    editorState={this.state.editorState}
-                                />
-                                </div>
-                                </div>
-                        </Col>
-                    </Row>
-                    <Router >
-                        <Row>
-                            <Col xl={12}>
-                            <div>
-                                <h2>Blogs</h2>
-                                <strong>Click on the links to read about blog</strong>
-                                <ul>
-                                <li><Link to="/">Home</Link></li>
-                                {links}
-                                </ul>
-                                <Route path="/:addres/:id" component={ReadBlog} />
-                            </div>
-                            </Col>
-                        </Row>
-                    </Router>
-                 </div>
-            </Container>
-
-        );
+  public render() {
+    if(this.state.content === null){
+      return <span>Loading...</span>
+    } else  {
+      return this.state.content
     }
+  }
 }
 
 export default BlogPageContainer;

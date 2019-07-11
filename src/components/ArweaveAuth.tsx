@@ -259,4 +259,14 @@ class Login extends Component<{}, RedirectState> {
   }
 }
 
+export async function getMyAddress():Promise<string | null>{
+  const wallet = localStorage.getItem("wallet");
+  if(wallet)
+    return await ArweaveSingleton.instance().arweave()
+                   .wallets.jwkToAddress(JSON.parse(wallet))
+  else
+    return Promise.resolve(null);
+};
+
+
 export default AuthToolbarClass;
