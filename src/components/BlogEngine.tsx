@@ -1,9 +1,8 @@
-import App from "../../App";
 import {ContentState ,convertFromRaw ,convertToRaw, Editor, EditorState,  RichUtils} from "draft-js";
 import React from "react";
 import { Col, Container,  Row} from "react-bootstrap";
 import { BrowserRouter as Router,  Link , Route } from "react-router-dom";
-import ReadBlog from "./readBlog";
+import ReadBlog from "./ReadBlog";
 
 const fakeAddress = "0x9003847536278188";
 
@@ -88,7 +87,6 @@ class BlogPageContainer extends React.Component<{}, {}> {
 
     public retrieveArticlesMetaData(): Array<Array<string | string>> {
         const container = localStorage.getItem(fakeAddress);
-        const end = 50;
         const compare = (a: any , b: any) => {
             const keyA = parseInt(a.created, 10);
             const keyB = parseInt(b.created, 10);
@@ -131,10 +129,12 @@ class BlogPageContainer extends React.Component<{}, {}> {
 
     public render() {
         const links = [];
-        const mlistOfContents = this.retrieveArticlesMetaData();
-        for (const [created, heading] of mlistOfContents) {
-            const link = `/${fakeAddress}/${created}`;
-            links.push(<li><Link to={link}>{heading}</Link></li>);
+      const mlistOfContents = this.retrieveArticlesMetaData();
+         let i = 0;
+         for (const [created, heading] of mlistOfContents) {
+          const link = `/${fakeAddress}/${created}`;
+          console.log(link);
+          links.push(<li key={i++}><Link key={i++} to={link}>{heading}</Link></li>);
         }
 
         return (
@@ -162,16 +162,13 @@ class BlogPageContainer extends React.Component<{}, {}> {
                         <Row>
                             <Col xl={12}>
                             <div>
-                                <h2>Blogss</h2>
+                                <h2>Blogs</h2>
                                 <strong>Click on the links to read about blog</strong>
                                 <ul>
-                                <li>
-                                    <Link to="/">Home</Link>
-                                    </li>
-                                    {links}
+                                <li><Link to="/">Home</Link></li>
+                                {links}
                                 </ul>
-                                <Route exact={true} path="/" component={App} />
-                                <Route path="/users/:id" component={ReadBlog} />
+                                <Route path="/:addres/:id" component={ReadBlog} />
                             </div>
                             </Col>
                         </Row>

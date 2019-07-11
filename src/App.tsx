@@ -1,76 +1,78 @@
-import "./App.css";
-import arweave from "./ArweaveInit";
-import {AppState, UserState} from "./Types";
-import BlogEngine from "./components/BlogEngine";
-import Login from "./components/LoginPage";
-import LoginButton from "./components/Login";
-import LogoutButton from "./components/Logout";
-import React from "react";
+import React, { Component } from "react";
 
-let mainStyle = {
-  width:"100%",
-  height:"100%",
-  backgroundImage:"linear-gradient(#292929, #191919)",
-  backgroundColor:"#191919",
-  hotColor:"#F69E4D",
-  mainColorAlt:"#fa7d36",
-  mainColor:"#F76B1C",
-}
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.css";
+import { PrivateRoute, PublicRoute } from "./components/ArweaveAuth";
+import { AppState, UserState } from "./Types";
+
+import { Col, Container, Row } from "react-bootstrap";
+
+import HomeDefault from "./components/HomeDefault";
+
+const mainStyle = {
+  width: "100%",
+  height: "100%",
+  backgroundImage: "linear-gradient(#292929, #191919)",
+  backgroundColor: "#191919",
+  hotColor: "#F69E4D",
+  mainColorAlt: "#fa7d36",
+  mainColor: "#F76B1C",
+};
 
 export default class App extends Component<{}, AppState> {
-  state = {
+  public state = {
     userDetails: {
       loggedIn: false,
       address: "",
-      balance: 0
-    }
+      balance: 0,
+    },
   };
 
-  updateDimensions() {
-    //force it to rerender when the window is resized to make sure qr fits etc
+  public componentRef = React.createRef<any>();
+
+  public updateDimensions() {
+    // force it to rerender when the window is resized to make sure qr fits etc
     this.forceUpdate();
   }
 
-  componentDidMount() {
-    document.body.style.backgroundColor = mainStyle.backgroundColor
+  public componentDidMount() {
+    document.body.style.backgroundColor = mainStyle.backgroundColor;
     window.addEventListener("resize", this.updateDimensions.bind(this));
 
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 
-  logout(event: React.MouseEvent<HTMLElement, MouseEvent>): void{
-    console.log("logOut")
+  public logout(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
+    console.log("logOut");
   }
 
-  loggedin(logged: boolean, address: string){
-    let userDetails: UserState  = {
+  public loggedin(logged: boolean, address: string) {
+    const userDetails: UserState  = {
       loggedIn: logged,
-      address: address,
-      balance: 0
-    }
-    this.setState({userDetails})
+      address,
+      balance: 0,
+    };
+    this.setState({userDetails});
   }
-  render() {
+  public render() {
     return (
         <Container>
-           <Router>
-            <AuthArweaveComponent/>
-            <div className="App">
+        <Router>
+        <HomeDefault>
             <Row>
              <Col xl={12}>
-                <Route path="/" exact component={DefaultComponent} />
-                <Route path="/public" component={PublicRoute} />
-                <Route path="/public/createWallet" exact component={CreateWalletComponent} />
+                <Switch>
+                 <Route path="/public" component={PublicRoute} />
                 <Route path="/private" component={PrivateRoute} />
-                <Route path="/private/draft" exact component={BlogEngine} />
+                </Switch>
              </Col>
             </Row>
-           </div>
-          </Router>
+        </HomeDefault>
+        </Router>
         </Container>
-    )
+    );
   }
 }

@@ -1,7 +1,6 @@
-import {ContentState , convertFromRaw, Editor, EditorState} from "draft-js";
+import {ContentState , convertFromRaw, EditorState} from "draft-js";
 import React from "react";
 import { Col, Container,  Row} from "react-bootstrap";
-import { withRouter, WithRouterProps } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
 
 const fakeAddress = "0x9003847536278188";
@@ -14,8 +13,8 @@ class ReadBlog extends React.Component<RouteComponentProps<{}>> {
     public article?: ContentState;
 
     constructor(props: any) {
-        super(props);
-        this.onSubmit = this.onSubmit.bind(this);
+      super(props);
+      this.onSubmit = this.onSubmit.bind(this);
     }
 
     public retrieveArticle(created: string): ContentState | null {
@@ -32,18 +31,17 @@ class ReadBlog extends React.Component<RouteComponentProps<{}>> {
     }
 
     public componentDidMount() {
-        let name = this.props.location.key;
-        let url = this.props.match.url;
+        const name = this.props.location.key;
+        const url = this.props.match.url;
         console.log(name);
         console.log(url);
         console.log(this.props);
-        let timeStamp = url.split("/")[1];
+        const timeStamp = url.split("/")[1];
         const article = this.retrieveArticle(timeStamp);
         if (article) {
-            this.article = article;
-            this.state.editorState = EditorState.createWithContent(article);
+          this.article = article;
+          this.setState({editorState: EditorState.createWithContent(article)});
         }
-
     }
 
     public onSubmit() {
@@ -51,7 +49,8 @@ class ReadBlog extends React.Component<RouteComponentProps<{}>> {
     }
 
     public render() {
-        if (this.state.editorState.isEmpty()) {
+      console.log(this.state.editorState.getCurrentContent().hasText());
+      if (this.state.editorState.getCurrentContent().hasText() === false) {
             return (
                 <Container>
                      <div className="App">
@@ -66,8 +65,7 @@ class ReadBlog extends React.Component<RouteComponentProps<{}>> {
                                 <textarea
                                     className="form-control"
                                     rows={50}
-                                >
-                                    {this.state.editorState.getCurrentContent.toString()}
+                                    defaultValue={this.state.editorState.getCurrentContent.toString()}>                                    
                                 </textarea>
                                 </div>
                             </Col>

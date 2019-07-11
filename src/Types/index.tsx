@@ -1,19 +1,18 @@
-import Arweave from 'arweave/web';
-import React from 'react';
+import Arweave from "arweave/web";
+import React from "react";
 
-export interface UserState{
+export interface UserState {
   loggedIn: boolean;
   address: string;
   balance: number;
 }
-
 
 export interface LoginProps {
   loggedin: (logged: boolean, address: string) => void;
   arweave?: Arweave;
 }
 
-export interface AppState{
+export interface AppState {
   userDetails: UserState;
   arweave?: Arweave;
 }
@@ -21,7 +20,6 @@ export interface AppState{
 export interface RedirectState {
   redirectToReferrer: boolean;
 }
-
 
 export interface ButtonLoginProps {
 }

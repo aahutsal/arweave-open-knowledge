@@ -1,18 +1,22 @@
-import React from 'react';
-
+import React from "react";
+import Toolbar from "./ArweaveAuth";
 const propTypes = {};
 const defaultProps = {};
 
-class HomeDefault extends React.Component<{},{}> {
-  static propTypes = {}
-  static defaultProps = {}
+class HomeDefault extends React.Component {
+  public static propTypes = {};
+  public static defaultProps = {};
 
-  render() {
+  public render() {
     return (
-      <h1>Home</h1>
+        <div className="Home">
+           <Toolbar/>
+           <span className="h6 text-white">Home &gt;&gt;</span>
+           {this.props.children}
+        </div>
     );
   }
-};
+}
 
 HomeDefault.propTypes = propTypes;
 HomeDefault.defaultProps = defaultProps;
