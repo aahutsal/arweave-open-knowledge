@@ -1,15 +1,11 @@
-import React, {Component} from "react";
 import "./App.css";
-import { UserState, AppState } from "./Types";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { AuthArweaveComponent, PrivateRoute, PublicRoute } from "./components/AuthArweaveComponent"
-
-import { Container, Row, Col } from "react-bootstrap";
-
-
-import CreateWalletComponent from './components/CreateWalletComponent'
-import DefaultComponent from './components/DefaultComponent'
-import BlogEngine from './components/BlogEngine'
+import arweave from "./ArweaveInit";
+import {AppState, UserState} from "./Types";
+import BlogEngine from "./components/BlogEngine";
+import Login from "./components/LoginPage";
+import LoginButton from "./components/Login";
+import LogoutButton from "./components/Logout";
+import React from "react";
 
 let mainStyle = {
   width:"100%",
@@ -49,6 +45,7 @@ export default class App extends Component<{}, AppState> {
     console.log("logOut")
   }
 
+<<<<<<< HEAD
   loggedin(logged: boolean, address: string){
     let userDetails: UserState  = {
       loggedIn: logged,
@@ -58,6 +55,45 @@ export default class App extends Component<{}, AppState> {
     this.setState({userDetails})
   }
   render() {
+=======
+  loggedin(logged: boolean, address: string,  view: string) {
+    let userDetails: UserState  = {
+      loggedIn: false,
+       address: ""
+    };
+    this.setState({userDetails, view})
+  }
+    render() {
+      if(this.state.view.length === 0){
+          this.setState({view:"main"});
+      }
+      const showView =  () => {
+          switch(this.state.view) {
+              case "main":
+                  return(
+                      <div>
+                        <div className="main-card card w-100" style={{zIndex:1}}>
+                          <span className={this.state.userDetails.loggedIn?'hidden':''}>
+                            <LoginButton changeView={this.updateView.bind(this)}/>
+                          </span>
+                          <span className={this.state.userDetails.loggedIn?'':'hidden'}>
+                            <LogoutButton logout={this.logout.bind(this)}/>
+                          </span>
+                            <BlogEngine/>
+                        </div>
+                      </div>
+                  );
+              case "Login":
+                  return(
+                      <Login
+                      changeView={this.updateView.bind(this)}
+                      loggedin={this.loggedin.bind(this)}
+                      arweave={this.state.arweave}/>
+                  );
+          }
+      };
+
+>>>>>>> Article retrival functionality
     return (
         <Container>
            <Router>
